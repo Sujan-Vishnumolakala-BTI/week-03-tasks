@@ -1,0 +1,10 @@
+services:
+  crud-api:
+    image: spring-boot-crud:v0.1.4 
+    ports:
+      - "8080:8080"
+    volumes:
+      - crud-data:/app/data
+
+volumes:
+  crud-data:
