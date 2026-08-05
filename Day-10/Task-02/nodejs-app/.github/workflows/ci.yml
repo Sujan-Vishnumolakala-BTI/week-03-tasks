@@ -1,0 +1,238 @@
+# # name: Docker Node.js CI
+
+# # on:
+# #   push:
+# #     branches:
+# #       - main
+
+# #   pull_request:
+# #     branches:
+# #       - main
+
+
+# # jobs:
+
+# #   docker-build-test:
+
+# #     runs-on: ubuntu-latest
+
+# #     steps:
+
+# #       # Download repository code
+# #       - name: Checkout code
+# #         uses: actions/checkout@v4
+
+
+# #       # Build Docker image
+# #       - name: Build Docker image
+# #         run: |
+# #           docker build -t nodejs-app .
+
+
+# #       # Start Docker container
+# #       - name: Run Docker container
+# #         run: |
+# #           docker run -d \
+# #             --name node-container \
+# #             -p 3000:3000 \
+# #             nodejs-app
+
+
+# #       # Wait for application startup
+# #       - name: Wait for application
+# #         run: |
+# #           sleep 5
+
+
+# #       # Check container status
+# #       - name: Check Docker container
+# #         run: |
+# #           docker ps -a
+
+
+# #       # Show application logs if needed
+# #       - name: Docker logs
+# #         run: |
+# #           docker logs node-container
+
+
+# #       # Test API
+# #       - name: Test Node.js application
+# #         run: |
+# #           curl --fail http://localhost:3000
+
+
+# #       # Cleanup
+# #       - name: Stop container
+# #         if: always()
+# #         run: |
+# #           docker stop node-container || true
+# #           docker rm node-container || true
+
+# name: Docker CI Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+#   pull_request:
+#     branches:
+#       - main
+
+
+# jobs:
+
+#   docker-build-test:
+
+#     runs-on: ubuntu-latest
+
+
+#     steps:
+
+#       # Checkout source code
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+
+#       # Build Docker image
+#       - name: Build Docker image
+#         run: |
+#           docker build -t nodejs-app .
+
+
+#       # Start application container
+#       - name: Run Docker container
+#         run: |
+#           docker run -d \
+#             --name node-container \
+#             -p 3000:3000 \
+#             nodejs-app
+
+
+#       # Wait for application startup
+#       - name: Wait for application
+#         run: |
+#           sleep 5
+
+
+#       # Check container is running
+#       - name: Check container
+#         run: |
+#           docker ps -a
+
+
+#       # Display application logs
+#       - name: Docker logs
+#         run: |
+#           docker logs node-container
+
+
+#       # Test application endpoint
+#       - name: Test API
+#         run: |
+#           curl --fail http://localhost:3000
+
+
+#       # Cleanup container
+#       - name: Cleanup
+#         if: always()
+#         run: |
+#           docker stop node-container || true
+#           docker rm node-container || true
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+
+permissions:
+  contents: read
+  security-events: write
+
+
+jobs:
+
+  codeql-analysis:
+
+    name: CodeQL Security Scan
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+
+
+  docker-build-test:
+
+    name: Docker Build and Test
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+
+      - name: Build Docker image
+        run: |
+          docker build -t nodejs-app .
+
+
+      - name: Run Docker container
+        run: |
+          docker run -d \
+          --name node-container \
+          -p 3000:3000 \
+          nodejs-app
+
+
+      - name: Wait for application
+        run: |
+          sleep 5
+
+
+      - name: Check container
+        run: |
+          docker ps -a
+
+
+      - name: Application logs
+        run: |
+          docker logs node-container
+
+
+      - name: Test application
+        run: |
+          curl --fail http://localhost:3000
+
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop node-container || true
+          docker rm node-container || true

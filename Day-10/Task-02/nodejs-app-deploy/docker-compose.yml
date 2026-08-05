@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+
+  nodejs-app:
+
+    image: sujanvishnumolakala/nodejs-app:0.1.0
+
+    container_name: nodejs-app
+
+    restart: always
