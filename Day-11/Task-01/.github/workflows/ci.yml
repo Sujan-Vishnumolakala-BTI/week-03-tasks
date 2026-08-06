@@ -1,0 +1,25 @@
+name: Node.js Docker CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t user-validator .
+
+      - name: Run Unit Tests
+        run: docker run --rm user-validator

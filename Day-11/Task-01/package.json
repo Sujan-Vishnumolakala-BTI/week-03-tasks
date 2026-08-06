@@ -1,0 +1,11 @@
+{
+  "name": "user-validator",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  }
+}
